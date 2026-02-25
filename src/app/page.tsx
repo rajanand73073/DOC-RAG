@@ -3,22 +3,9 @@
 import { motion } from "framer-motion";
 import { Database, Search, Layers, Sparkles, GitBranch } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import axios from "axios";
+import { Button } from "@/components/ui/button"
+import Link from "next/link";
 export default function HomePage() {
-
- const handleSubmit = async ()=>{
-try {
-  const response = await axios.get("/api/loadDoc");
-  console.log("response",response.data);
-  
-} catch (error) {
-  console.error("Error loading document:", error);
-}
-
- }
-
-
   return (
     <div className="min-h-screen bg-linear-to-br from-black via-zinc-900 to-zinc-950 text-white">
       {/* Hero Section */}
@@ -48,10 +35,11 @@ try {
           transition={{ delay: 0.4 }}
           className="mt-10 flex justify-center gap-4"
         >
-      
-          <Button size="lg" className="rounded-2xl px-8 " onClick={handleSubmit}>
+       <Link href="/Query-Dashboard">
+        <Button className="rounded-2xl px-8 cursor-pointer hover:bg-zinc-800 hover:text-white"  >
             Get Started
           </Button>
+        </Link>
           
           <Button
             size="lg"
@@ -90,7 +78,6 @@ try {
           <h2 className="text-3xl md:text-4xl font-semibold text-center">
             How It Works
           </h2>
-
           <div className="grid md:grid-cols-4 gap-8 mt-16">
             <StepCard
               icon={<Database size={26} />}
@@ -147,7 +134,6 @@ function FeatureCard({ icon, title, description }: any) {
     </Card>
   );
 }
-
 function StepCard({ icon, title, description }: any) {
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 hover:bg-zinc-800 transition-colors">
