@@ -11,6 +11,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@huggingface/inference": "^4.13.13",
     "@langchain/community": "^1.1.18",
     "@langchain/core": "^1.1.28",
     "@langchain/qdrant": "^1.0.1",
