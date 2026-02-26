@@ -4,7 +4,7 @@ import { Document } from "@langchain/core/documents";
 
 function reciprocalRankFusion(
   resultSets: [Document, number][][],
-  k: number = 60
+  k: number = 60,
 ): Document[] {
   const scores = new Map<string, { doc: Document; score: number }>();
 
@@ -38,25 +38,21 @@ export async function getDocuments(queries: RoutedQuery[]) {
         q.query,
         6,
         {
-          must: [
-            { key: "metadata.topic", match: { value: q.topic } },
-          ],
-          should:[
-            { key: "metadata.section", match: { value: q.section } },
-          ]
-        }
+          must: [{ key: "metadata.topic", match: { value: q.topic } }],
+          should: [{ key: "metadata.section", match: { value: q.section } }],
+        },
       );
 
       // Lexical boost — re-rank docs that contain the exact query string
       const lexicalResults = vectorResults.filter(([doc]) =>
-        doc.pageContent.toLowerCase().includes(q.query.toLowerCase())
+        doc.pageContent.toLowerCase().includes(q.query.toLowerCase()),
       );
 
       allResultSets.push(vectorResults);
       if (lexicalResults.length > 0) allResultSets.push(lexicalResults);
     }
 
-    const fused = reciprocalRankFusion(allResultSets).slice(0, 6);
+    const fused: Document[] = reciprocalRankFusion(allResultSets).slice(0, 6);
     console.log("Fused results: ", fused.length);
     return fused;
   } catch (error: any) {

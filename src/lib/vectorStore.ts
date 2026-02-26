@@ -12,14 +12,11 @@ export async function getVectorStore() {
     apiKey: process.env.HUGGINGFACEHUB_API_KEY!,
   });
 
-  vectorStore = await QdrantVectorStore.fromExistingCollection(
-    embeddings,
-    {
-      url: process.env.QDRANT_URL!,
-      apiKey: process.env.QDRANT_API_KEY,
-      collectionName: "qdrant-docs-miniLM"
-    }
-  );
+  vectorStore = await QdrantVectorStore.fromExistingCollection(embeddings, {
+    url: process.env.QDRANT_URL!,
+    apiKey: process.env.QDRANT_API_KEY,
+    collectionName: "qdrant-docs-miniLM",
+  });
 
   // Create payload indexes for filtered search (no-op if they already exist)
   const client = new QdrantClient({
@@ -28,15 +25,15 @@ export async function getVectorStore() {
   });
 
   await Promise.all([
-  client.createPayloadIndex("qdrant-docs-miniLM", {
-    field_name: "metadata.topic",
-    field_schema: "keyword",
-  }),
-  client.createPayloadIndex("qdrant-docs-miniLM", {
-    field_name: "metadata.section",
-    field_schema: "keyword",
-  }),
-]);
+    client.createPayloadIndex("qdrant-docs-miniLM", {
+      field_name: "metadata.topic",
+      field_schema: "keyword",
+    }),
+    client.createPayloadIndex("qdrant-docs-miniLM", {
+      field_name: "metadata.section",
+      field_schema: "keyword",
+    }),
+  ]);
 
   return vectorStore;
 }

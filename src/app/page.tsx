@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Database, Search, Layers, Sparkles, GitBranch } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -32,8 +32,8 @@ export default function HomePage() {
           transition={{ duration: 0.8 }}
           className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto"
         >
-          Multi‑Query Retrieval + Hybrid Search + Reciprocal Rank Fusion.
-          Built for precision, scalability, and production‑grade knowledge retrieval.
+          Multi‑Query Retrieval + Hybrid Search + Reciprocal Rank Fusion. Built
+          for precision, scalability, and production‑grade knowledge retrieval.
         </motion.p>
 
         <motion.div
@@ -42,26 +42,18 @@ export default function HomePage() {
           transition={{ delay: 0.4 }}
           className="mt-10 flex justify-center gap-4"
         >
-       <Link href="/Query-Dashboard">
-        <Button className="rounded-2xl px-8 cursor-pointer hover:bg-zinc-800 hover:text-white"  >
-            Get Started
-          </Button>
-        </Link>
-          
-          <Button
-            size="lg"
-            variant="outline"
-            className="rounded-2xl px-8 border-zinc-700 text-black"
-          >
-            View Architecture
-          </Button>
+          <Link href="/Query-Dashboard">
+            <Button className="rounded-2xl px-8 bg-purple-700 hover:bg-purple-400 hover:text-black cursor-pointer">
+              Get Started
+            </Button>
+          </Link>
         </motion.div>
       </section>
 
       {/* Features Section */}
       <section className="max-w-6xl mx-auto px-6 pb-24">
         <div className="grid md:grid-cols-3 gap-8 ">
-          <FeatureCard 
+          <FeatureCard
             icon={<Layers size={28} />}
             title="Smart Chunking"
             description="Recursive text splitting optimized for semantic coherence and retrieval accuracy."
@@ -110,20 +102,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer CTA */}
-      <section className="text-center py-20">
-        <h3 className="text-2xl font-semibold">
-          Ready to Build Enterprise‑Grade RAG?
-        </h3>
-        <p className="text-zinc-400 mt-4">
-          Deploy scalable, intelligent documentation search powered by LangChain and Qdrant.
-        </p>
-        <div className="mt-8">
-          <Button size="lg" className="rounded-2xl px-10">
-            Launch Project
-          </Button>
-        </div>
-      </section>
+      
     </div>
   );
 }
@@ -134,9 +113,7 @@ function FeatureCard({ icon, title, description }: CardProps) {
       <CardContent className="p-8 text-white">
         <div className="text-indigo-400">{icon}</div>
         <h3 className="mt-4 text-xl font-semibold">{title}</h3>
-        <p className="mt-3 text-white text-sm leading-relaxed">
-          {description}
-        </p>
+        <p className="mt-3 text-white text-sm leading-relaxed">{description}</p>
       </CardContent>
     </Card>
   );

@@ -10,7 +10,6 @@ import path from "path";
 
 dotenv.config();
 
-
 function classifyFromUrl(url: string) {
   const parts = new URL(url).pathname.split("/").filter(Boolean);
   return {
@@ -34,8 +33,8 @@ function cleanPageContent(rawHtml: string) {
 // ----------------------------
 
 async function ingest() {
-  const topicList :string[] = []
-  const sectionList:string[] = []
+  const topicList: string[] = [];
+  const sectionList: string[] = [];
   if (!process.env.QDRANT_URL) {
     throw new Error("Missing QDRANT_URL");
   }
@@ -58,8 +57,8 @@ async function ingest() {
         (href) =>
           href.includes("/documentation/") &&
           !href.includes("#") &&
-          !href.endsWith(".pdf")
-      )
+          !href.endsWith(".pdf"),
+      ),
   );
 
   await browser.close();
@@ -91,8 +90,8 @@ async function ingest() {
 
       const enrichedDocs = docs.map((doc) => {
         const { topic, section } = classifyFromUrl(doc.metadata.source);
-        topicList.push(topic)
-        sectionList.push(section)
+        topicList.push(topic);
+        sectionList.push(section);
         console.log(`Topic: ${topic}, Section: ${section}`);
         return {
           ...doc,
@@ -110,7 +109,7 @@ async function ingest() {
       console.log(`✂️ Created ${chunkedDocs.length} chunks`);
 
       // Upload page-by-page (memory safe)
-         QdrantVectorStore.fromDocuments(chunkedDocs, embeddings, {
+      QdrantVectorStore.fromDocuments(chunkedDocs, embeddings, {
         url: process.env.QDRANT_URL!,
         apiKey: process.env.QDRANT_API_KEY,
         collectionName,
@@ -122,12 +121,19 @@ async function ingest() {
   }
   const uniqueTopics = Array.from(new Set(topicList));
   const uniqueSections = Array.from(new Set(sectionList));
-  await writeFile(path.join(process.cwd(), "topicList.txt"), uniqueTopics.join("\n"), "utf-8");
-  await writeFile(path.join(process.cwd(), "section.txt"), uniqueSections.join("\n"), "utf-8");
+  await writeFile(
+    path.join(process.cwd(), "topicList.txt"),
+    uniqueTopics.join("\n"),
+    "utf-8",
+  );
+  await writeFile(
+    path.join(process.cwd(), "section.txt"),
+    uniqueSections.join("\n"),
+    "utf-8",
+  );
   console.log("📝 Saved topics to topicList.txt and sections to section.txt");
 
   console.log("\n🎉 Ingestion completed successfully!");
-  
 }
 
 // Run it
