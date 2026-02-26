@@ -11,6 +11,12 @@ It follows a multi-stage RAG pipeline:
 
 This README documents what is implemented so far and why each decision was made.
 
+## Live Links
+
+- 🌐 Production: [qdrantdocassistant.vercel.app](https://qdrantdocassistant.vercel.app)
+- 🌐 Main Branch Preview: [qdrantdocassistant-git-main-rajanand73073s-projects.vercel.app](https://qdrantdocassistant-git-main-rajanand73073s-projects.vercel.app)
+- 🌐 Deployment Preview: [qdrantdocassistant-kaq1dqeor-rajanand73073s-projects.vercel.app](https://qdrantdocassistant-kaq1dqeor-rajanand73073s-projects.vercel.app)
+
 ## Architecture (What We Built So Far)
 
 The current implementation matches your architecture diagram closely:
@@ -79,6 +85,37 @@ This is an important improvement you made:
 - Model: `groq/compound`
 - Used in: `src/lib/finalOutput.ts`
 - Purpose: generate the final grounded answer using retrieved document context.
+
+## Next.js Config Change (Server External Packages)
+
+We added this in `next.config.ts`:
+
+```ts
+serverExternalPackages: [
+  "@langchain/community",
+  "@langchain/core",
+  "@langchain/qdrant",
+  "langchain",
+]
+```
+
+### What `serverExternalPackages` does
+
+- Marks these packages as server-only dependencies.
+- Tells Next.js/Turbopack not to bundle them for client/browser output.
+- Lets Node.js load them directly at runtime on the server.
+
+### Why this is needed for LangChain packages
+Then the real issue is Turbopack trying to bundle all of @langchain/community including the HuggingFace parts you don't even use. The fix is to tell Next.js to not bundle these packages. 
+
+These packages rely on Node/server capabilities such as:
+
+- file system access (`fs`)
+- crypto/runtime APIs
+- heavier backend operations
+- server-side network calls
+
+Those are not browser-safe. Keeping them in `serverExternalPackages` prevents client bundling issues and ensures retrieval/LLM logic runs only on the server, where it belongs.
 
 ## Current Project Flow (Code Map)
 
@@ -173,4 +210,3 @@ Response (non-Qdrant intent):
   "message": "Please ask a Qdrant-related question."
 }
 ```
-
