@@ -8,11 +8,17 @@ import { Loader2, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import axios from "axios";
 
+type RoutedQuery = {
+  query: string;
+  topic: string;
+  section: string;
+};
+
 export default function Page() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
-  const [expandedQueries, setExpandedQueries] = useState<string[]>([]);
+  const [expandedQueries, setExpandedQueries] = useState<RoutedQuery[]>([]);
 
   const handleSubmit = async () => {
     if (!query.trim()) return;
@@ -28,12 +34,17 @@ export default function Page() {
         setResponse(data.message);
         return;
       }      
-      setExpandedQueries(data.multiQueries || []);
+      setExpandedQueries(data.routedQueries || []);
       setResponse(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error fetching response:", err);
+      const errorData = axios.isAxiosError(err)
+        ? (err.response?.data as { error?: string; details?: string } | undefined)
+        : undefined;
       const apiError =
-        err?.response?.data?.error || err?.response?.data?.details || err?.message || "Request failed.";
+        errorData?.error ||
+        errorData?.details ||
+        (err instanceof Error ? err.message : "Request failed.");
       setResponse(apiError);
     }
 
@@ -81,7 +92,11 @@ finally {
               <ul className="space-y-2 text-sm text-zinc-400">
                 {expandedQueries.map((q, i) => (
                   <li key={i} className="bg-zinc-800 p-2 rounded-lg">
-                    {q}
+                    <p className="text-zinc-100">{q.query}</p>
+                    <p className="mt-1 text-xs text-zinc-400">
+                      topic: <span className="text-zinc-200">{q.topic}</span> | section:{" "}
+                      <span className="text-zinc-200">{q.section}</span>
+                    </p>
                   </li>
                 ))}
               </ul>

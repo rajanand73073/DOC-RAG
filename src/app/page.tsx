@@ -5,6 +5,13 @@ import { Database, Search, Layers, Sparkles, GitBranch } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
+import type { ReactNode } from "react";
+
+type CardProps = {
+  icon: ReactNode;
+  title: string;
+  description: string;
+};
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-linear-to-br from-black via-zinc-900 to-zinc-950 text-white">
@@ -121,7 +128,7 @@ export default function HomePage() {
   );
 }
 
-function FeatureCard({ icon, title, description }: any) {
+function FeatureCard({ icon, title, description }: CardProps) {
   return (
     <Card className="bg-zinc-900 border-zinc-800 rounded-2xl hover:scale-105 transition-transform">
       <CardContent className="p-8 text-white">
@@ -134,7 +141,7 @@ function FeatureCard({ icon, title, description }: any) {
     </Card>
   );
 }
-function StepCard({ icon, title, description }: any) {
+function StepCard({ icon, title, description }: CardProps) {
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 hover:bg-zinc-800 transition-colors">
       <div className="text-indigo-400">{icon}</div>

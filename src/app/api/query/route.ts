@@ -1,23 +1,18 @@
-
 import { getMultiQueries } from "@/src/lib/multiQuery"
-import { suggestTopicSection } from "@/src/lib/suggestTopic_Section"
 import { NextResponse } from "next/server"
+import { getDocuments } from "@/src/lib/documentRetrieval"  
 
 export async function POST(req: Request) {
   const { query } = await req.json()
-  const multiQueries = await getMultiQueries(query)
-
-  if (multiQueries.length === 0) {
+  const routedQueries = await getMultiQueries(query)
+  if (routedQueries.length === 0) {
     return NextResponse.json({
       message: "Please ask a Qdrant-related question."
     })
   }
-
-  const topicSection = await suggestTopicSection(multiQueries)
-  console.log("Docs with suggested topic and section: ", topicSection);
-
+  const docs = await getDocuments(routedQueries) // Implement this function to retrieve relevant documents based on routedQueries
+  // console.log("Retrieved Documents: ", docs);
   return NextResponse.json({
-    multiQueries,
-    topicSection
+    routedQueries,
   })
 }
